@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Search from './Search';
 
 
 const Users = () => {
@@ -18,30 +19,11 @@ const Users = () => {
     fetchData();
   }, []);
 
-  const handleSearch = async () => {
-    try {
-      const res = await fetch(`https://jsonplaceholder.typicode.com/users?q=${value}`);
-      const data = await res.json(); 
-    
-      setUsers(data); 
-      setValue(""); 
-    } catch (error) {
-      console.error("Error searching:", error);
-    }
-  }
+ 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',marginTop:'20px' }}>
-     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <input
-        name='search'
-        placeholder='Search by name'
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-    </div>
-
+    <Search setUsers={setUsers}/>
     <div style={{marginTop: '70px', display: 'flex', justifyContent: 'center' }}>
       
       <div style={{ border: '1px solid #ccc', borderRadius: '5px' }}>

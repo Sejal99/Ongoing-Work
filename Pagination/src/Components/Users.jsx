@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Search from './Search';
+import Sort from './Sort';
 
 
 const Users = () => {
@@ -32,6 +33,7 @@ const Users = () => {
             <tr style={{ backgroundColor: '#f2f2f2' }}>
               <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>ID</th>
               <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Name</th>
+              <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>UserName</th>
               <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Email</th>
             </tr>
           </thead>
@@ -40,6 +42,7 @@ const Users = () => {
               <tr key={user.id}>
                 <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.id}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.name}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.username}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.email}</td>
               </tr>
             ))}
@@ -47,6 +50,7 @@ const Users = () => {
         </table>
       </div>
     </div>
+    <Sort setUsers={setUsers}/>
     </div>
   );
 };

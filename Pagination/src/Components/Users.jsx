@@ -2,11 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Search from './Search';
 import Sort from './Sort';
 import Filter from './Filter';
+import Pagination from './Pagination';
 
 
 const Users = () => {
   const [users, setUsers] = useState([]);
-  const [value, setValue] = useState('');
+  const limit=5;
+  const [page,setPage]=useState(1);
+  const [totalDocs,setTotalDocs]=useState(limit);
+  const [skip,setSkip]=useState(0);
+  
+
   const fetchData = async () => {
     try {
       const res = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -39,7 +45,7 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {users.slice(0, 10).map(user => (
+            {users.slice(skip, totalDocs).map(user => (
               <tr key={user.id}>
                 <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.id}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>{user.name}</td>
@@ -55,6 +61,7 @@ const Users = () => {
     <Sort setUsers={setUsers}/>
     <Filter setUsers={setUsers}/>
     </div>
+    <Pagination setPage={setPage}  page={page} setTotalDocs={setTotalDocs} setSkip={setSkip} limit={limit} totalDocs={totalDocs} users={users}/>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Search from './Search';
 import Sort from './Sort';
+import Filter from './Filter';
 
 
 const Users = () => {
@@ -50,7 +51,10 @@ const Users = () => {
         </table>
       </div>
     </div>
+    <div style={{display:'flex',flexDirection:'row',gap:'50px'}}>
     <Sort setUsers={setUsers}/>
+    <Filter setUsers={setUsers}/>
+    </div>
     </div>
   );
 };

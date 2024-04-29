@@ -9,6 +9,11 @@ productRouter.get("/", async (req, res) => {
     //sorting
     const sortParam = req.query.sortBy; 
     const filterParam=req.query.filerBy;
+
+ // Pagination parameters
+ const page = parseInt(req.query.page) || 1; // Current page number, default to 1
+ const limit = parseInt(req.query.limit) || 10; // Number of items per page, default to 10
+
     // Define a base query to find products
     let query = {};
 
@@ -36,8 +41,17 @@ productRouter.get("/", async (req, res) => {
     query.price = { $lte: filterParam };
   }
 
-    const products = await Product.find(query).sort(sort);
-    res.json(products);
+   // Calculate skip value for pagination
+   const skip = (page - 1) * limit;
+
+   // Fetch products with pagination
+   const products = await Product.find(query).sort(sort).skip(skip).limit(limit);
+
+   res.json({
+    products,
+    currentPage: page,
+    totalPages: Math.ceil(products.length / limit),
+  });
   } catch (error) {
     console.error("Error fetching products:", error);
     res.status(500).json({ error: "Error fetching products" });

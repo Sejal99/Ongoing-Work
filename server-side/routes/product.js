@@ -8,6 +8,7 @@ productRouter.get("/", async (req, res) => {
     console.log(searchTerm);
     //sorting
     const sortParam = req.query.sortBy; 
+    const filterParam=req.query.filerBy;
     // Define a base query to find products
     let query = {};
 
@@ -28,8 +29,12 @@ productRouter.get("/", async (req, res) => {
       sort[sortParam] = 1; // Sorting in ascending order, change to -1 for descending order
     }
 
-
-
+ // New: Apply filtering if filterParam is provided
+ if (filterParam) {
+    // Modify the query to include the filter criteria
+    // Example: Filter by price less than or equal to the provided value
+    query.price = { $lte: filterParam };
+  }
 
     const products = await Product.find(query).sort(sort);
     res.json(products);

@@ -1,14 +1,16 @@
-// const express = require('express');
-// const userRoutes = require('./routes/userRoutes');
+const redis = require('redis');
+const client = redis.createClient();
+const express=  require("express")
+const app= express()
+app.use(express.json())
+client.on('connect', function() {
+    console.log('Connected!');
+  });
 
-// const app = express();
-// const port = process.env.PORT || 3000;
 
-// app.use(express.json());
+  client.on('error', function () {
+    console.error('Redis error:');
+});
 
-// // Route for signup API
-// app.use('/api/user', userRoutes);
 
-// app.listen(port, () => {
-//     console.log(`Server is running on port ${port}`);
-// });
+app.listen(3000, ()=> console.log('Listening on port 3000'))

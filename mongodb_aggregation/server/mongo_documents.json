@@ -1,0 +1,8 @@
+[
+    { "_id": 1, "item": "apple", "quantity": 5, "price": 1.2 },
+    { "_id": 2, "item": "orange", "quantity": 10, "price": 0.8 },
+    { "_id": 3, "item": "banana", "quantity": 7, "price": 1.0 },
+    { "_id": 4, "item": "apple", "quantity": 10, "price": 1.2 },
+    { "_id": 5, "item": "orange", "quantity": 15, "price": 0.8 }
+  ]
+  

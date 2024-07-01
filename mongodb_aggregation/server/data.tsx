@@ -35,8 +35,37 @@ db.customers.aggregate([
   { $sort: { totalPurchaseAmount: -1 } },
   { $limit: 3 }
 ])
+
 This pipeline groups customers by customerId, calculates their totalPurchaseAmount,
  sorts them in descending order by totalPurchaseAmount, and limits the output to the top 3 customers
 
+Example 3: Using $lookup for Join Operations
+Suppose you have a orders collection and a products collection, and you want to enrich orders with product details:
 
+db.orders.aggregate([
+  {
+    $lookup: {
+      from: "products",
+      localField: "productId",
+      foreignField: "_id",
+      as: "productDetails"
+    }
+  },
+  { $unwind: "$productDetails" },
+  {
+    $project: {
+      _id: 1,
+      productName: "$productDetails.name",
+      quantity: 1,
+      totalPrice: { $multiply: ["$quantity", "$productDetails.price"] }
+    }
+  }
+])
+
+
+In this pipeline:
+
+$lookup performs a left outer join with the products collection based on productId.
+$unwind deconstructs the productDetails array.
+$project reshapes the documents to include only the necessary fields (_id, productName, quantity, totalPrice).
     */

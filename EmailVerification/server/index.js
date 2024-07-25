@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { mongooseConnect } from './connection/connect.js'
 import userRoutes from "./routes/user.js"
 import cors from 'cors';
-
+import transporter from "./mail/transporter.js"
 dotenv.config();
 
 const app=express();

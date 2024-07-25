@@ -1,6 +1,7 @@
 import { User } from "../models/user.js";
 import sendUserCreationEmail from "../mail/sendAccountCreationMail.js";
 
+
 export const create = async (req, res) => {
   const { name, email } = req.body;
   console.log(name,email);

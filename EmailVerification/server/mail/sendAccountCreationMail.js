@@ -17,6 +17,7 @@ const sendUserCreationEmail = async ({ name, email }) => {
         subject: "Verify Your Email",
         html: data
     };
+    console.log(mainOptions);
 
     await transporter.sendMail(mainOptions);
 };

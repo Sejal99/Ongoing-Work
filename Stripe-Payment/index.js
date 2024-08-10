@@ -14,7 +14,13 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/checkout',async(req,res)=>{
-    
+    const sessions=await stripe.checkout.sessions.create({
+        line_items,
+
+        mode:"payment",
+        success_url:"http://localhost:5000/complete",
+        cancel_url:"http://localhost:5000/complete"
+    })
 })
 
 

@@ -37,6 +37,9 @@ app.post('/checkout',async(req,res)=>{
     
 })
 
+app.get('/complete',(req,res)=>{
+    res.send('Your payment was successful')
+})
 
 app.listen(5000,()=>console.log('server started on 5000')
 )

@@ -30,6 +30,9 @@ app.post('/checkout',async(req,res)=>{
         ],
 
         mode:"payment",
+        shipping_address_collection: {
+            allowed_countries: ['US', 'BR']
+        },
         success_url:"http://localhost:5000/complete",
         cancel_url:"http://localhost:5000/cancel"
     })

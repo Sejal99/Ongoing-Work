@@ -1,8 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
+dotenv.config();
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-dotenv.config();
+
 
 const app=express();
 
@@ -14,13 +15,26 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/checkout',async(req,res)=>{
-    const sessions=await stripe.checkout.sessions.create({
-        line_items,
+    const session=await stripe.checkout.sessions.create({
+        line_items:[
+            {
+                price_data:{
+                    currency:'usd',
+                    product_data:{
+                        name:'Node.js and Express book'
+                    },
+                    unit_amount:50*100
+                },
+                quantity:1
+            }
+        ],
 
         mode:"payment",
         success_url:"http://localhost:5000/complete",
-        cancel_url:"http://localhost:5000/complete"
+        cancel_url:"http://localhost:5000/cancel"
     })
+    console.log(session);
+    
 })
 
 

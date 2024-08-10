@@ -33,7 +33,7 @@ app.post('/checkout',async(req,res)=>{
         success_url:"http://localhost:5000/complete",
         cancel_url:"http://localhost:5000/cancel"
     })
-    console.log(session);
+    res.redirect(session.url)
     
 })
 

@@ -42,7 +42,8 @@ app.get('/complete',(req,res)=>{
 })
 
 app.get('/cancel',(req,res)=>{
-    res.send('Your payment was cancelled')
+    res.send('Your payment was cancelled');
+    res.redirect('/')
 })
 
 app.listen(5000,()=>console.log('server started on 5000')

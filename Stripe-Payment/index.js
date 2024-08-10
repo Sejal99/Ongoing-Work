@@ -40,9 +40,11 @@ app.post('/checkout',async(req,res)=>{
     
 })
 
-app.get('/complete',(req,res)=>{
-    console.log(req.query.session_id);
-    
+app.get('/complete',async(req,res)=>{
+    const result = Promise.all([
+        stripe.checkout.sessions.retrieve(req.query.session_id, { expand: ['payment_intent.payment_method'] }),
+        stripe.checkout.sessions.listLineItems(req.query.session_id)
+    ])
     res.send('Your payment was successful')
 })
 

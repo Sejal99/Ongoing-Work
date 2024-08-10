@@ -1,5 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 dotenv.config();
 
 const app=express();
@@ -9,6 +11,10 @@ app.use(express.json());
 
 app.get('/',(req,res)=>{
     res.render('index.ejs')
+})
+
+app.post('/checkout',async(req,res)=>{
+    
 })
 
 

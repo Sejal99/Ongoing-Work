@@ -33,7 +33,7 @@ app.post('/checkout',async(req,res)=>{
         shipping_address_collection: {
             allowed_countries: ['US', 'BR']
         },
-        success_url:"http://localhost:5000/complete",
+        success_url:"http://localhost:5000/complete?session_id={CHECKOUT_SESSION_ID}",
         cancel_url:"http://localhost:5000/cancel"
     })
     res.redirect(session.url)
@@ -41,6 +41,8 @@ app.post('/checkout',async(req,res)=>{
 })
 
 app.get('/complete',(req,res)=>{
+    console.log(req.query.session_id);
+    
     res.send('Your payment was successful')
 })
 

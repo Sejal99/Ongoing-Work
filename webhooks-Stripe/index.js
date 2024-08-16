@@ -11,6 +11,15 @@ const bodyparser=require("body-parser")
 app.post('/hooks',bodyparser.raw({type:'application/json'}),async(req,res)=>{
     let signingsecret=process.env.SIGN_SECRET;
     console.log(signingsecret);
+
+    const payload=req.body;
+    const sig =req.headers['stripe-signature']
+
+
+    //matching these wenhook is from stripe
+
+    
+
     
 })
 

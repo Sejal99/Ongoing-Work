@@ -8,7 +8,7 @@ const app = express();
 const bodyparser=require("body-parser")
 
 
-app.post('/hooks',async(req,res)=>{
+app.post('/hooks',bodyparser.raw({type:'application/json'}),async(req,res)=>{
     let signingsecret=process.env.SIGN_SECRET;
     console.log(signingsecret);
     

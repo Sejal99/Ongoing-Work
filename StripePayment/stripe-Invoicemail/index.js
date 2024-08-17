@@ -38,7 +38,7 @@ app.post(
       case "checkout.session.async_payment_succeeded":
         session = event.data.object;
         let emailSucceeded = session.customer_details.email;
-
+        let product="https://1drv.ms/i/s!AuxExDjwoh_jrqFwCNgrzOMDU7JijQ?e=2Sogud"
         // Create a transporter object using SMTP
         let transporter = nodemailer.createTransport({
           service: "gmail",
@@ -58,7 +58,11 @@ app.post(
             to: emailSucceeded,
             subject: "Payment Succeeded ✔", // Subject line
             text: "Your payment was successful.", // plain text body
-            html: "<b>Your payment was successful.</b>", // html body
+            html: `
+            Hello ${session.customer_details.email} Thanks for payment of the product
+            Here is the link of product from google drive is ${product}. You can download it.
+            
+            `, // html body
           });
 
           console.log("Message sent: %s", info.messageId);

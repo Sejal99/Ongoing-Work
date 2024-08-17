@@ -15,7 +15,7 @@ let endpointSecret = process.env.SECRET;
 let session = "";
 
 app.post(
-  "/webhook",
+  "/webhooks",
   express.raw({ type: "application/json" }),
   async (request, response) => {  // Make the function async
     const sig = request.headers["stripe-signature"];
@@ -35,7 +35,7 @@ app.post(
     
         // Handle payment failed event
         break;
-      case "checkout.session.async_payment_succeeded":
+      case "checkout.session.completed":
         session = event.data.object;
         let emailSucceeded = session.customer_details.email;
         let product="https://1drv.ms/i/s!AuxExDjwoh_jrqFwCNgrzOMDU7JijQ?e=2Sogud"

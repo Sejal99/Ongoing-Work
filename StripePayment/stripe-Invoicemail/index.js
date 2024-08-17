@@ -8,46 +8,50 @@ const stripe = require("stripe")(
 );
 const app = express();
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
   res.send("hii");
-  
-})
+});
 
 //webhook
+let endpointSecret = "whsec_xKfy7MhWzs4CumxhevGYSGg77OpH1ZuS";
+let session = "";
 
-let session=
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  (request, response) => {
+    const sig = request.headers["stripe-signature"];
+    //stripe
+    let event;
 
-app.post('/webhook', express.raw({type: 'application/json'}), (request, response) => {
-  const sig = request.headers['stripe-signature'];
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      response.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
 
-  let event;
+    // Handle the event
+    switch (event.type) {
+      case "checkout.session.async_payment_failed":
+        session = event.data.object;
+        // Then define and call a function to handle the event checkout.session.async_payment_failed
+        break;
+      case "checkout.session.async_payment_succeeded":
+        session = event.data.object;
+        //send invoice email using nodemailer
 
-  try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
-  } catch (err) {
-    response.status(400).send(`Webhook Error: ${err.message}`);
-    return;
+        // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
   }
-
-  // Handle the event
-  switch (event.type) {
-    case 'checkout.session.async_payment_failed':
-      session = event.data.object;
-      // Then define and call a function to handle the event checkout.session.async_payment_failed
-      break;
-    case 'checkout.session.async_payment_succeeded':
-      session = event.data.object;
-      // Then define and call a function to handle the event checkout.session.async_payment_succeeded
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-  // Return a 200 response to acknowledge receipt of the event
-  response.send();
-});
+);
 app.listen(5000, () => {
-    console.log("server listening on 5000");
-  });
-  
+  console.log("server listening on 5000");
+});

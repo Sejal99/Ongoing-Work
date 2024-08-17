@@ -2,18 +2,24 @@ const express = require("express");
 
 const dotenv = require("dotenv");
 dotenv.config();
+const nodemailer =require("nodemailer");
+
 
 const stripe = require("stripe")(
   "sk_test_51PmHJrRwMOzblwjNXVpacPizJrBXeRNn8uP55zrYcooYm5I71O5zaDp497EYZHL8RGOTCcU458CHNjewOJtbS6V700zDYokJQW"
 );
 const app = express();
 
+
+
+
+
 app.get("/", (req, res) => {
   res.send("hii");
 });
 
 //webhook
-let endpointSecret = "whsec_xKfy7MhWzs4CumxhevGYSGg77OpH1ZuS";
+let endpointSecret = process.env.SECRET;
 let session = "";
 
 app.post(
@@ -40,6 +46,31 @@ app.post(
       case "checkout.session.async_payment_succeeded":
         session = event.data.object;
         //send invoice email using nodemailer
+
+        let transporter = nodemailer.createTransport({
+          service:'gmail',
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD,
+          },
+        });
+      
+    
+          // send mail with defined transport object
+          let info = await transporter.sendMail({
+            from: process.env.EMAIL,
+        to: email,
+            subject: "Hello ✔", // Subject line
+            text: "Hello world?", // plain text body
+            html: "<b>Hello world?</b>", // html body
+          });
+        
+          console.log("Message sent: %s", info.messageId);
+        
+       
 
         // Then define and call a function to handle the event checkout.session.async_payment_succeeded
         break;

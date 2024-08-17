@@ -1,18 +1,10 @@
 const express = require("express");
-
 const dotenv = require("dotenv");
 dotenv.config();
-const nodemailer =require("nodemailer");
+const nodemailer = require("nodemailer");
 
-
-const stripe = require("stripe")(
-  "sk_test_51PmHJrRwMOzblwjNXVpacPizJrBXeRNn8uP55zrYcooYm5I71O5zaDp497EYZHL8RGOTCcU458CHNjewOJtbS6V700zDYokJQW"
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const app = express();
-
-
-
-
 
 app.get("/", (req, res) => {
   res.send("hii");
@@ -25,9 +17,8 @@ let session = "";
 app.post(
   "/webhook",
   express.raw({ type: "application/json" }),
-  (request, response) => {
+  async (request, response) => {  // Make the function async
     const sig = request.headers["stripe-signature"];
-    //stripe
     let event;
 
     try {
@@ -41,14 +32,16 @@ app.post(
     switch (event.type) {
       case "checkout.session.async_payment_failed":
         session = event.data.object;
-        // Then define and call a function to handle the event checkout.session.async_payment_failed
+    
+        // Handle payment failed event
         break;
       case "checkout.session.async_payment_succeeded":
         session = event.data.object;
-        //send invoice email using nodemailer
+        let emailSucceeded = session.customer_details.email;
 
+        // Create a transporter object using SMTP
         let transporter = nodemailer.createTransport({
-          service:'gmail',
+          service: "gmail",
           host: "smtp.gmail.com",
           port: 587,
           secure: false,
@@ -57,22 +50,23 @@ app.post(
             pass: process.env.EMAIL_PASSWORD,
           },
         });
-      
-    
+
+        try {
           // send mail with defined transport object
           let info = await transporter.sendMail({
             from: process.env.EMAIL,
-        to: email,
-            subject: "Hello ✔", // Subject line
-            text: "Hello world?", // plain text body
-            html: "<b>Hello world?</b>", // html body
+            to: emailSucceeded,
+            subject: "Payment Succeeded ✔", // Subject line
+            text: "Your payment was successful.", // plain text body
+            html: "<b>Your payment was successful.</b>", // html body
           });
-        
-          console.log("Message sent: %s", info.messageId);
-        
-       
 
-        // Then define and call a function to handle the event checkout.session.async_payment_succeeded
+          console.log("Message sent: %s", info.messageId);
+        } catch (error) {
+          console.error("Error sending email:", error);
+        }
+
+        // Handle payment succeeded event
         break;
       // ... handle other event types
       default:
@@ -83,6 +77,7 @@ app.post(
     response.send();
   }
 );
+
 app.listen(5000, () => {
   console.log("server listening on 5000");
 });
